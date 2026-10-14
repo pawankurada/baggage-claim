@@ -12,7 +12,8 @@ const overlay=document.querySelector('#overlay'), hud=document.querySelector('#h
 const counter=document.querySelector('#counter'), section=document.querySelector('#section');
 const stageIntro=document.querySelector('#stage-intro');
 let seenStages=new Set(),stageIntroRemaining=0;
-const W=1200,H=675, world=createWorld(config), keys=new Set(), images=new Map();
+let W=1200;
+const H=675, world=createWorld(config), keys=new Set(), images=new Map();
 const audio=createGameAudio(config.audio);
 canvas.width=W;canvas.height=H;
 canvas.tabIndex=0;
@@ -24,6 +25,14 @@ const losAngelesScenery=createLosAngelesScenery();
 for(const url of [config.artwork.character,config.artwork.finishCharacter,config.artwork.reunionCharacter,...config.bags.map(b=>b.image)].filter(Boolean)){const img=new Image();img.src=url;images.set(url,img);}
 let reunionTime=0,reunionStartX=0,reunited=false;
 let state='title',player,camera=0,collected=new Set(),checkpoint,jumpQueued=0,coyote=0,time=0,particles=[],last=0;
+function resizeViewport(){
+ const wrap=canvas.parentElement;if(!wrap?.clientWidth||!wrap.clientHeight)return;
+ W=Math.round(H*wrap.clientWidth/wrap.clientHeight);canvas.width=W;canvas.height=H;
+ camera=player?Math.max(0,Math.min(Math.max(0,world.width-W),player.x-W*.32)):0;
+}
+window.addEventListener('resize',resizeViewport);
+if(typeof ResizeObserver!=='undefined')new ResizeObserver(resizeViewport).observe(canvas.parentElement);
+resizeViewport();
 function text(tag,value,cls){const el=document.createElement(tag);el.textContent=value;if(cls)el.className=cls;return el;}
 function showCard(type,title,body,label,action){keys.clear();jumpQueued=0;overlay.replaceChildren();const card=text('div','','card '+type);if(type!=='letter')card.append(text('div',type==='title'?'Welcome to Baggage Claim':'A LITTLE SOMETHING FOR YOU','eyebrow'),text('div','♡','heart'));card.append(text('h1',title),text('p',body));const button=text('button',label);button.onclick=action;card.append(button);if(type==='title')card.append(text('div','← → MOVE     ·     SPACE JUMP','controls'));overlay.append(card);if(type==='letter'){card.tabIndex=-1;card.focus({preventScroll:true});card.scrollTop=0;}else button.focus();}
 function start(){reunited=false;reunionTime=0;audio.start();seenStages.clear();section.dataset.stage='';player={x:100,y:480,w:34,h:64,vx:0,vy:0,face:1,grounded:false};checkpoint={x:100,y:480};camera=0;collected=new Set();particles=[];keys.clear();jumpQueued=0;coyote=0;state='playing';overlay.replaceChildren();hud.hidden=false;canvas.focus({preventScroll:true});updateHud();}
