@@ -11,9 +11,9 @@ export const quizzes = [
         "correct": false
       },
       {
-        "text": "B. Sobremessa",
-        "feedback": "Wrong, you're thinking of our first date",
-        "correct": false
+        "text": "B. The Joint",
+        "feedback": "I know we were not together, but it was a lovely date. Great start 🔥",
+        "correct": true
       },
       {
         "text": "C. My house",
@@ -21,9 +21,9 @@ export const quizzes = [
         "correct": false
       },
       {
-        "text": "D. The Joint",
-        "feedback": "I know we were not together, but it was a lovely date. Great start 🔥",
-        "correct": true
+        "text": "D. Sobremessa",
+        "feedback": "Wrong, you're thinking of our first date",
+        "correct": false
       }
     ],
     "question": "Our Valentine's Day 2023 ‘date’ was here"
@@ -72,14 +72,14 @@ export const quizzes = [
         "text": "B. Oracle Park"
       },
       {
-        "correct": false,
-        "feedback": "Wrong, this is a very easy question. Come on 😒",
-        "text": "C. The taco place you loved—I can't remember the name for the life of me."
-      },
-      {
         "correct": true,
         "feedback": "Correct! And then we went home and watched OG 😭",
-        "text": "D. Dolores Park"
+        "text": "C. Dolores Park"
+      },
+      {
+        "correct": false,
+        "feedback": "Wrong, this is a very easy question. Come on 😒",
+        "text": "D. The taco place you loved—I can't remember the name for the life of me."
       }
     ],
     "question": "What was the last place we visited in San Francisco before you left?"
