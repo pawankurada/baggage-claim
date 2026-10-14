@@ -1,0 +1,9 @@
+<!doctype html>
+<html lang="en"><head><base href="../"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>A little birthday adventure</title><link rel="stylesheet" href="style.css"></head>
+<body><main class="shell"><header><a class="brand" href="./">♡ &nbsp; A little birthday adventure</a><span class="edition">MADE WITH LOVE · PROTOTYPE</span></header><div class="game-wrap"><canvas id="game" aria-label="Birthday platform adventure"></canvas><div id="hud" hidden><span id="counter">Bags: 0 / 5</span><span id="section"></span><button id="restart" aria-label="Restart adventure">Restart</button></div><div id="stage-intro" hidden></div><div id="overlay"></div></div><footer><span>A / D or ← / → to move &nbsp; · &nbsp; Space to jump</span><span>Take your time. Every little step counts. ♡</span></footer></main><script type="module">
+const source=await (await fetch('src/game.js')).text();
+const preview=source.replaceAll("from './", "from '"+location.origin+'/src/').replace("showCard('title',config.title,config.subtitle,'Start the Adventure',start);requestAnimationFrame(frame);", "start();collected=new Set(world.bags.map(b=>b.id));player.x=world.finish-70;player.y=config.level.groundY-player.h;update(0);reunionTime=2;update(0);requestAnimationFrame(function previewFrame(stamp){time=stamp/1000;draw();requestAnimationFrame(previewFrame);});");
+await import(URL.createObjectURL(new Blob([preview],{type:'text/javascript'})));
+</script></body></html>
+
+

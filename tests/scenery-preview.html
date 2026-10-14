@@ -1,0 +1,13 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><base href="../"><title>Stage scenery review</title><style>body{margin:20px;background:#f8f2ea;color:#59483f;font-family:Georgia}main{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}canvas{width:100%;border-radius:14px}h1{font-weight:normal;font-size:24px}h2{font-size:15px;font-weight:normal;margin:10px 0}</style></head><body><h1>Level 1 Â· Stage scenery review</h1><main></main><script type="module">
+import {createHyderabadScenery} from './src/hyderabad.js';
+import {createLondonScenery} from './src/london.js';
+import {createSanFranciscoScenery} from './src/san-francisco.js';
+import {createCopenhagenScenery} from './src/copenhagen.js';
+import {createLosAngelesScenery} from './src/los-angeles.js';
+import {config} from './src/config.js';
+import {createWorld} from './src/world.js';
+const scenery=createHyderabadScenery(),london=createLondonScenery(),sf=createSanFranciscoScenery(),copenhagen=createCopenhagenScenery(),la=createLosAngelesScenery(),world=createWorld(config),views=[];
+for(let i=0;i<5;i++){const el=document.createElement('section'),heading=document.createElement('h2'),canvas=document.createElement('canvas');heading.textContent=String(i+1).padStart(2,'0')+' '+config.level.sections[i].city+' • '+config.level.sections[i].caption;canvas.width=1200;canvas.height=675;el.append(heading,canvas);document.querySelector('main').append(el);views.push(canvas);}
+function frame(t){views.forEach((canvas,i)=>{const ctx=canvas.getContext('2d'),camera=i*1650+(i===0?Number(new URLSearchParams(location.search).get('hyderabadCamera')||0):i===1?450:0);scenery.background(ctx,camera,t/1000,1200,675,1650);scenery.midground(ctx,camera,t/1000,1650,550);london.draw(ctx,camera,t/1000,1200,675,1650);sf.draw(ctx,camera,t/1000,1200,675,1650);copenhagen.draw(ctx,camera,t/1000,1200,675,1650);la.draw(ctx,camera,t/1000,1200,675,1650,world.width);ctx.save();ctx.translate(-camera,0);for(const s of world.surfaces){ctx.fillStyle='#c5ae8e';ctx.fillRect(s.x,s.y,s.w,s.y===550?125:20);ctx.fillStyle='#98a17e';ctx.fillRect(s.x,s.y,s.w,8);}ctx.restore();scenery.foreground(ctx,camera,t/1000,1650,550);});requestAnimationFrame(frame);}requestAnimationFrame(frame);
+</script></body></html>
+

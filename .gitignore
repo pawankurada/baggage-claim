@@ -1,0 +1,8 @@
+node_modules/
+dist/
+/*.jpeg
+/*.jpg
+/*.webp
+/*.mp3
+/*.wav
+tests/*.png

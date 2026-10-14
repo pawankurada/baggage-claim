@@ -1,0 +1,1 @@
+Place transparent character and handbag PNG/WebP files here. Set their paths in src/config.js. Character images face right and are rendered in a 64 × 80 box; handbags in a 60 × 65 box. Use matching aspect ratios and tight transparent bounds. Missing images fall back to the marked placeholders.

@@ -1,0 +1,33 @@
+*{box-sizing:border-box}body{margin:0;background:#f8f2ea;color:#59483f;font-family:Georgia,serif}.shell{max-width:1440px;margin:auto;padding:24px 36px}header,footer{display:flex;justify-content:space-between;align-items:center;gap:20px}header{padding:6px 0 24px}.brand{color:inherit;text-decoration:none;font-size:20px}.edition,footer,#hud,button,.eyebrow,.controls{font-family:Arial,sans-serif}.edition,.eyebrow{font-size:10px;letter-spacing:2.5px}.game-wrap{position:relative;overflow:hidden;border-radius:24px;background:#f3e5dc;box-shadow:0 18px 60px #74534212;aspect-ratio:16/9;min-height:400px}canvas{display:block;width:100%;height:100%}footer{font-size:12px;color:#8b7b70;padding:22px 4px}#hud{position:absolute;top:20px;left:24px;right:24px;display:flex;align-items:center;gap:20px;font-size:13px}#hud[hidden]{display:none}#counter{background:#fffaf1e8;padding:12px 20px;border-radius:30px}#section{flex:1;text-align:center;color:#776458}button{border:0;border-radius:30px;background:#815b4e;color:#fffaf2;padding:15px 30px;font-size:13px;cursor:pointer;transition:transform .2s,background .2s}button:hover{background:#68483e;transform:translateY(-2px)}button:focus-visible{outline:3px solid #bd8965;outline-offset:4px}#restart{padding:10px 16px;background:#fffaf1cc;color:#685246}#overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:24px;background:#f8eee64d;backdrop-filter:blur(3px)}#overlay:empty{display:none}.card{text-align:center;max-width:540px;width:100%;background:#fffaf2f2;border:1px solid #fff;padding:40px 45px;border-radius:24px;box-shadow:0 14px 60px #70554614}.card.title{background:#fffaf2e6}.eyebrow{color:#9d7764}h1{font-weight:normal;font-size:clamp(32px,4vw,54px);line-height:1.1;margin:18px 0}p{font-size:16px;line-height:1.7;color:#897365}.heart{font-size:32px;color:#bf8d80}.controls{font-size:11px;margin-top:24px;color:#9b887b}.letter{max-width:780px;max-height:100%;overflow:auto;text-align:left;padding:40px 60px}.letter p{white-space:pre-wrap;color:#665044}.letter h1{font-size:38px}.letter button{margin-top:16px}@media(max-width:700px){.shell{padding:16px 12px}.edition{display:none}.brand{font-size:16px}.game-wrap{min-height:440px}footer{font-size:10px;flex-direction:column;gap:8px}.card{padding:26px 24px}#section{display:none}.letter{padding:26px}}
+/* Keep numbered stage names readable at compact browser widths. */
+#section{min-width:0;line-height:1.4}canvas:focus{outline:none}
+@media(max-width:900px){#hud{flex-wrap:wrap;gap:8px}#section{display:block;order:3;flex-basis:100%;background:#fffaf1dc;border-radius:12px;padding:7px 12px;font-size:12px}#restart{margin-left:auto}}
+/* City arrival titles stay above the scenery and never intercept controls. */
+#stage-intro{position:absolute;right:24px;bottom:24px;width:min(42%,360px);pointer-events:none;text-align:left}
+#stage-intro[hidden]{display:none}
+.stage-title-card{padding:14px 18px;background:#fff8ecef;border:1px solid #fffdf3;border-radius:14px;box-shadow:0 12px 35px #6e49451c;animation:city-arrival 3.6s both}
+.stage-city{font-family:Georgia,serif;font-size:clamp(18px,2vw,24px);font-weight:bold;color:#715246;line-height:1.2}
+.stage-caption{margin-top:6px;font-size:clamp(12px,1.3vw,15px);line-height:1.4;color:#80675c}
+@keyframes city-arrival{0%{opacity:0;transform:translateY(-12px)}12%,86%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-6px)}}
+@media(max-width:900px){#stage-intro{right:16px;bottom:16px;width:min(65%,320px)}.stage-title-card{padding:12px 16px}}
+@media(prefers-reduced-motion:reduce){.stage-title-card{animation-name:city-arrival-quiet}@keyframes city-arrival-quiet{0%,100%{opacity:0}12%,86%{opacity:1}}}
+/* Bag challenges reuse the existing overlay; only quiz cards receive these styles. */
+.quiz-card{max-width:510px;padding:28px 32px;max-height:100%;overflow:auto}
+.quiz-card h1{font-size:clamp(24px,3vw,34px);margin:16px 0 22px}
+.quiz-answers{display:grid;gap:10px}
+.quiz-option{min-height:48px;width:100%;border:1px solid #ddcbbd;background:#f5eadc;color:#685246;border-radius:12px;padding:12px 18px;text-align:left;font-size:15px}
+.quiz-option:hover{background:#eadbc9;color:#59483f;transform:translateY(-1px)}
+.quiz-option.quiz-wrong{animation:quiz-wrong .4s ease;background:#f5e0da;border-color:#cf9e91}
+.quiz-option.quiz-correct,.quiz-option.quiz-correct:hover{background:#e1ead4;border-color:#91a87f;color:#425c3b;box-shadow:0 0 18px #b6c69666}
+.quiz-option:disabled{cursor:default;transform:none}
+.quiz-feedback{min-height:44px;margin:16px 0 8px;font-size:15px;line-height:1.5;color:#95685c}
+.quiz-success{color:#58734b;animation:quiz-glow .5s ease}
+.quiz-claim[hidden]{display:none}
+@keyframes quiz-wrong{25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}
+@keyframes quiz-glow{50%{transform:scale(1.04)}}
+@media(max-width:700px){.quiz-card{padding:20px}.quiz-card h1{margin:12px 0 16px}.quiz-answers{gap:8px}}
+@media(prefers-reduced-motion:reduce){.quiz-option.quiz-wrong,.quiz-success{animation:none}}
+.card.title h1,.card.title p{white-space:pre-line}
+/* Keep the welcome headline in two balanced lines. */
+.card.title{max-width:640px}
+.card.title h1{font-size:clamp(28px,3.2vw,42px);line-height:1.15;text-wrap:balance}
