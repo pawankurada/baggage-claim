@@ -33,7 +33,7 @@ export function createCopenhagenScenery(){
   const colors=['#cba15f','#b97866','#a6b8af','#c38d72','#d5c293','#95adb6'];
   ctx.save();ctx.globalAlpha=.18;
   colors.forEach((color,i)=>{for(let j=0;j<5;j++)rect(ctx,671+drift+i*104+Math.sin(time+j)*4,443+j*11,63-j*6,6,color,2);});ctx.restore();
-  boat(ctx,587,479,time,'#ab7666');boat(ctx,1425,455,time,'#6e9293');
+  boat(ctx,920,505,time,'#ab7666');boat(ctx,1425,455,time,'#6e9293');
   // Bicycles are parked on the street, safely above ground and outside jumps.
   bike(ctx,160,550,'#778e7c');bike(ctx,324,550,'#a96f61');bike(ctx,1245,550,'#768c92');
   // Low harbor railings and café tables are scenery, never platforms.

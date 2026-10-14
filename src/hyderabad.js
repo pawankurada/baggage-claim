@@ -59,7 +59,7 @@ export function createHyderabadScenery(assets = hyderabadAssets) {
         for(let j=0;j<3;j++)rect(ctx,x+14+j*23,top+23,9,18,'#ead4be',2);
       }
       // Keep the minarets at the same height, stretching the lower façade to street level.
-      image(ctx,'charminar',425-camera*.85,95,430,468);
+      image(ctx,'charminar',615-camera*.85,95,350,468);
       // A cinema portrait fixed to a background building, not suspended above it.
       const posterX=990-camera*.85;
       rect(ctx,posterX-22,300,124,250,'#ccb0a2',3);
