@@ -7,7 +7,7 @@ export const config = {
   title: 'This could’ve been a card,\nbut you deserve more.',
   subtitle: 'Five cities. Five challenges. Five bags.\nGet them all right and there’s something waiting for you at the end.',
   finalLetter: birthdayLetter,
-  endingMessage: 'I’m taking the 5 Polène bags you collected in exchange for this letter. Symbolically, I’m taking away any baggage that’s holding you down. Romantically, I’m here for you. Financially, this is the best I can do.',
+  endingMessage: 'I’m taking the 5 bags you collected in exchange for this letter. Symbolically, I’m taking away any baggage that’s holding you down. Romantically, I’m here for you. Financially, this is the best I can do.',
   audio: {
     backgroundMusic: 'public/assets/audio/love-story-8bit.mp3',
     endingMusic: 'public/assets/audio/down-8bit.wav', // Plays after the record scratch.
