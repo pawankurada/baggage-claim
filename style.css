@@ -31,3 +31,27 @@
 /* Keep the welcome headline in two balanced lines. */
 .card.title{max-width:640px}
 .card.title h1{font-size:clamp(28px,3.2vw,42px);line-height:1.15;text-wrap:balance}
+/* Fit the whole game to the available browser height as well as its width. */
+html,body{height:100%;overflow:hidden}
+.shell{width:100%;max-width:min(1440px,calc((100dvh - 104px)*16/9 + 48px));height:100dvh;padding:16px 24px;display:flex;flex-direction:column;gap:12px;min-width:0}
+header{padding:0;min-height:28px;flex-shrink:0}
+footer{padding:0;min-height:20px;flex-shrink:0}
+.game-wrap{width:100%;min-height:0;aspect-ratio:16/9;flex-shrink:0;margin:auto 0}
+.card{max-height:100%;overflow:auto;overscroll-behavior:contain}
+@media(max-width:700px){
+ .shell{padding:12px;max-width:100%;gap:8px}
+ header{min-height:24px}footer{gap:4px;min-height:28px}
+ .game-wrap{width:min(100%,calc((100dvh - 92px)*16/9));align-self:center}
+}
+@media(max-height:760px){
+ #overlay{padding:16px}
+ .card{padding:22px 28px}
+ .card.title h1{font-size:clamp(24px,3vw,34px);margin:12px 0}
+ .card.title p{font-size:14px;line-height:1.5;margin:12px 0}
+ .card.title .heart{font-size:24px}
+ .card.title button{padding:12px 24px}
+ .card.title .controls{margin-top:14px}
+ .quiz-card{padding:18px 24px}
+ .quiz-card h1{font-size:26px;margin:12px 0 16px}
+ .quiz-answers{gap:8px}.quiz-feedback{margin:10px 0 6px;min-height:30px}
+}
