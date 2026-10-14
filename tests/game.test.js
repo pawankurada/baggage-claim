@@ -1,3 +1,4 @@
+import {stageView} from '../src/stage-view.js';
 import {showBagQuiz} from '../src/quiz.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -9,7 +10,7 @@ test('full game loop: movement, jump, fall, five paused quizzes, ending, letter,
  const elements=new Map();
  const element=()=>({dataset:{},children:[],append(...items){this.children.push(...items);},replaceChildren(...items){this.children=items;},focus(){},getContext(){return {};}});
  const document={querySelector(id){if(!elements.has(id))elements.set(id,element());return elements.get(id);},createElement:element,addEventListener(){}};
- const sandbox={showBagQuiz:(doc,overlay,quiz,claim)=>showBagQuiz(doc,overlay,quiz,claim,fn=>fn()),createGameAudio:()=>({start(){},jump(){},quizOpen(){},collect(){},finish(){}}),config,createWorld,landingSurface,createHyderabadScenery:()=>({background(){},midground(){},foreground(){}}),createLondonScenery:()=>({draw(){}}),createSanFranciscoScenery:()=>({draw(){}}),createCopenhagenScenery:()=>({draw(){}}),createLosAngelesScenery:()=>({draw(){}}),document,window:{addEventListener(){}},requestAnimationFrame(){},Image:class{}};
+ const sandbox={stageView,showBagQuiz:(doc,overlay,quiz,claim)=>showBagQuiz(doc,overlay,quiz,claim,fn=>fn()),createGameAudio:()=>({start(){},jump(){},quizOpen(){},collect(){},finish(){}}),config,createWorld,landingSurface,createHyderabadScenery:()=>({background(){},midground(){},foreground(){}}),createLondonScenery:()=>({draw(){}}),createSanFranciscoScenery:()=>({draw(){}}),createCopenhagenScenery:()=>({draw(){}}),createLosAngelesScenery:()=>({draw(){}}),document,window:{addEventListener(){}},requestAnimationFrame(){},Image:class{}};
  const source=readFileSync(new URL('../src/game.js',import.meta.url),'utf8').replace(/^import .*;\r?\n/gm,'');
  vm.createContext(sandbox);vm.runInContext(source+`
  start(); keys.add('KeyD'); update(.1); if(player.x<=100)throw Error('movement');
@@ -38,6 +39,7 @@ test('full game loop: movement, jump, fall, five paused quizzes, ending, letter,
  `,sandbox);
  assert.ok(true);
 });
+
 
 
 

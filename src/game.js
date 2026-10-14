@@ -1,4 +1,5 @@
 import {showBagQuiz} from './quiz.js';
+import {stageView} from './stage-view.js';
 import {createGameAudio} from './audio.js';
 import {config} from './config.js';
 import {createWorld,landingSurface} from './world.js';
@@ -11,6 +12,7 @@ const canvas=document.querySelector('#game'), ctx=canvas.getContext('2d');
 const overlay=document.querySelector('#overlay'), hud=document.querySelector('#hud');
 const counter=document.querySelector('#counter'), section=document.querySelector('#section');
 const stageIntro=document.querySelector('#stage-intro');
+const stageTransition=document.querySelector('#stage-transition');
 let seenStages=new Set(),stageIntroRemaining=0;
 let W=1200;
 const H=675, world=createWorld(config), keys=new Set(), images=new Map();
@@ -28,7 +30,7 @@ let state='title',player,camera=0,collected=new Set(),checkpoint,jumpQueued=0,co
 function resizeViewport(){
  const wrap=canvas.parentElement;if(!wrap?.clientWidth||!wrap.clientHeight)return;
  W=Math.round(H*wrap.clientWidth/wrap.clientHeight);canvas.width=W;canvas.height=H;
- camera=player?Math.max(0,Math.min(Math.max(0,world.width-W),player.x-W*.32)):0;
+ camera=stageView(player?.x||0,W,config.level.sectionWidth,world.bags.length,world.width).camera;
 }
 window.addEventListener('resize',resizeViewport);
 if(typeof ResizeObserver!=='undefined')new ResizeObserver(resizeViewport).observe(canvas.parentElement);
@@ -38,6 +40,7 @@ function showCard(type,title,body,label,action){keys.clear();jumpQueued=0;overla
 function start(){reunited=false;reunionTime=0;audio.start();seenStages.clear();section.dataset.stage='';player={x:100,y:480,w:34,h:64,vx:0,vy:0,face:1,grounded:false};checkpoint={x:100,y:480};camera=0;collected=new Set();particles=[];keys.clear();jumpQueued=0;coyote=0;state='playing';overlay.replaceChildren();hud.hidden=false;canvas.focus({preventScroll:true});updateHud();}
 function updateHud(){counter.textContent=`Bags: ${collected.size} / ${world.bags.length}`;const stage=Math.min(world.bags.length-1,Math.floor(player.x/config.level.sectionWidth));
  if(section.dataset.stage===String(stage))return;
+ if(section.dataset.stage!=='')stageTransition.replaceChildren(text('div','','city-fade'));
  section.dataset.stage=String(stage);
  const name=config.level.sections[stage] || {city:'A little birthday adventure',caption:''};
  const heading=text('strong',`${String(stage+1).padStart(2,'0')} ${name.city} •`);
@@ -64,7 +67,7 @@ function update(dt){time+=dt;stageIntroRemaining=Math.max(0,stageIntroRemaining-
  const bottom=p.y+p.h;p.vy+=f.gravity*dt;p.x=Math.max(0,Math.min(world.width-p.w,p.x+p.vx*dt));p.y+=p.vy*dt;p.grounded=false;
  if(p.vy>=0){const surface=landingSurface(p,bottom,world.surfaces);if(surface){p.y=surface.y-p.h;p.vy=0;p.grounded=true;checkpoint={x:p.x,y:p.y};}}
  if(p.y>H+70){p.x=checkpoint.x;p.y=checkpoint.y;p.vy=0;p.vx=0;jumpQueued=0;coyote=0;}
- camera=Math.max(0,Math.min(world.width-W,p.x-W*.32));updateHud();
+ camera=stageView(p.x,W,config.level.sectionWidth,world.bags.length,world.width).camera;updateHud();
  for(const bag of world.bags){if(!collected.has(bag.id)&&Math.abs(p.x+p.w/2-bag.x)<43&&Math.abs(p.y+p.h/2-bag.y)<60){
   state='quiz';keys.clear();jumpQueued=0;audio.quizOpen();
   showBagQuiz(document,overlay,config.quizzes[bag.id],()=>{
@@ -111,12 +114,19 @@ function drawReunion(){
  if(reunionTime>1.2){const pop=Math.min(1,(reunionTime-1.2)/.35);ctx.save();ctx.translate(world.finish-3,config.level.groundY-109);ctx.scale(pop,pop);ctx.fillStyle='#cc7582';ctx.font='32px Georgia';ctx.textAlign='center';ctx.fillText('♥',0,Math.sin(time*3)*2);ctx.restore();}
 }
 function draw(){ctx.clearRect(0,0,W,H);
- scenery.background(ctx,camera,time,W,H,config.level.sectionWidth);
- scenery.midground(ctx,camera,time,config.level.sectionWidth,config.level.groundY);
- londonScenery.draw(ctx,camera,time,W,H,config.level.sectionWidth);
- sanFranciscoScenery.draw(ctx,camera,time,W,H,config.level.sectionWidth);
- copenhagenScenery.draw(ctx,camera,time,W,H,config.level.sectionWidth);
- losAngelesScenery.draw(ctx,camera,time,W,H,config.level.sectionWidth,world.width);
+ const view=stageView(player?.x||0,W,config.level.sectionWidth,world.bags.length,world.width);
+ camera=view.camera;
+ // Extra-wide screens receive current-city atmosphere outside its playable bounds.
+ const palettes=[['#e9c4ba','#f1d1b5'],['#dce9e9','#e5ead5'],['#d2e6ed','#e7eadc'],['#e4e9d9','#f7e7c8'],['#b6a0bd','#f8d9ac']];
+ const colors=palettes[view.stage]||palettes[0],sky=ctx.createLinearGradient(0,0,0,H);
+ sky.addColorStop(0,colors[0]);sky.addColorStop(1,colors[1]);ctx.fillStyle=sky;ctx.fillRect(0,0,W,H);
+ ctx.fillStyle='#c5ae8e';ctx.fillRect(0,config.level.groundY,W,H-config.level.groundY);
+ ctx.save();ctx.beginPath();ctx.rect(view.start-camera,0,view.end-view.start,H);ctx.clip();
+ if(view.stage===0){scenery.background(ctx,camera,time,W,H,config.level.sectionWidth);scenery.midground(ctx,camera,time,config.level.sectionWidth,config.level.groundY);}
+ if(view.stage===1)londonScenery.draw(ctx,camera,time,W,H,config.level.sectionWidth);
+ if(view.stage===2)sanFranciscoScenery.draw(ctx,camera,time,W,H,config.level.sectionWidth);
+ if(view.stage===3)copenhagenScenery.draw(ctx,camera,time,W,H,config.level.sectionWidth);
+ if(view.stage===4)losAngelesScenery.draw(ctx,camera,time,W,H,config.level.sectionWidth,world.width);
  ctx.save();ctx.translate(-camera,0);
  for(let i=0;i<world.bags.length;i++){const base=i*config.level.sectionWidth;for(let j=0;j<9;j++){const x=base+120+j*180;ctx.strokeStyle='#a5ab83';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x,550);ctx.lineTo(x,526);ctx.stroke();ctx.fillStyle=j%2?'#d7a69a':'#e1bf87';ctx.beginPath();ctx.arc(x,523,5,0,7);ctx.fill();}}
  for(const s of world.surfaces){const elevated=s.y!==config.level.groundY;
@@ -153,9 +163,10 @@ if(config.artwork.character?.endsWith('/mini.svg')){
  // Torso stays steady while the trouser legs and shoes swing beneath it.
  ctx.drawImage(img,0,0,128,110,0,0,64,55);
 }else ctx.drawImage(img,0,0,64,80);ctx.restore();}else{const sway=state==='playing'&&p.vx?Math.sin(time*12)*3:0;round(p.x-4,p.y+7,42,44,18,'#49362f');round(p.x+8,p.y+45,7,19+sway,3,'#735548');round(p.x+23,p.y+45,7,19-sway,3,'#735548');round(p.x+3,p.y+28,30,27,10,'#cc8b76');round(p.x+6,p.y+8,24,23,10,'#d8a27e');ctx.fillStyle='#49362f';ctx.beginPath();ctx.ellipse(p.x+17,p.y+8,16,9,0,Math.PI,0);ctx.fill();ctx.fillStyle='#49362f';ctx.fillRect(p.x+(p.face>0?24:10),p.y+18,2,3);ctx.fillStyle='#8d7663';ctx.font='9px Arial';ctx.fillText('PLACEHOLDER',p.x-17,p.y-12);}
- ctx.restore();scenery.foreground(ctx,camera,time,config.level.sectionWidth,config.level.groundY);if(state==='ending'||state==='letter')for(const part of particles){part.y+=part.v/60;if(part.y>H)part.y=-10;ctx.save();ctx.translate(part.x+Math.sin(time+part.x)*12,part.y);ctx.rotate(time);ctx.fillStyle=part.color;ctx.fillRect(-3,-3,6,10);ctx.restore();}}
+ ctx.restore();if(view.stage===0)scenery.foreground(ctx,camera,time,config.level.sectionWidth,config.level.groundY);ctx.restore();if(state==='ending'||state==='letter')for(const part of particles){part.y+=part.v/60;if(part.y>H)part.y=-10;ctx.save();ctx.translate(part.x+Math.sin(time+part.x)*12,part.y);ctx.rotate(time);ctx.fillStyle=part.color;ctx.fillRect(-3,-3,6,10);ctx.restore();}}
 function frame(stamp){const dt=last?Math.min((stamp-last)/1000,.033):0;last=stamp;update(dt);draw();requestAnimationFrame(frame);}
 showCard('title',config.title,config.subtitle,'Start the Adventure',start);requestAnimationFrame(frame);
+
 
 
 

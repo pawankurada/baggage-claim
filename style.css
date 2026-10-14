@@ -58,3 +58,7 @@ footer{padding:0;min-height:20px;flex-shrink:0}
 /* Expand the visible world horizontally instead of stretching its artwork. */
 .shell{max-width:none}
 .game-wrap{flex:1;aspect-ratio:auto;margin:0;width:100%;min-height:0;align-self:stretch}
+#stage-transition{position:absolute;inset:0;pointer-events:none;z-index:2}
+.city-fade{position:absolute;inset:0;background:#f8f2ea;animation:city-reveal .55s ease-out both}
+@keyframes city-reveal{from{opacity:1}to{opacity:0}}
+@media(prefers-reduced-motion:reduce){.city-fade{animation-duration:.1s}}
